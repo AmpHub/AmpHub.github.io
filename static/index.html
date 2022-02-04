@@ -1,0 +1,179 @@
+<html>
+  <head>
+    <title>Sample Youtube</title>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js"
+      integrity="sha512-bZS47S7sPOxkjU/4Bt0zrhEtWx0y0CRkhEp8IckzK+ltifIIE9EMIMTuT/mEzoIMewUINruDBIR/jJnbguonqQ=="
+      crossorigin="anonymous"
+    ></script>
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <link href="https://unpkg.com/nes.css@2.3.0/css/nes.min.css" rel="stylesheet" />
+    
+    <style>
+      body {
+        overflow: hidden;
+      }
+
+      .mainbox {
+        width: 800px;
+        position: absolute;
+        left: 50%;
+        top: 30%;
+        
+        /* ur doin great! */
+
+        /* 
+        Yep!
+        */
+        transform: translate(-50%, -30%);
+        /* margin: auto;
+        margin-top: 150px; */
+        /* border: 1px solid black; */
+        padding: 20px;
+      }
+
+
+      .inputbox {
+        width: 95%;
+        margin: auto;
+        /* border: 1px solid black; */
+        padding: 10px;
+      }
+
+      .urlInput {
+        width: 75%;
+        font-size: 10px;
+      }
+
+      .title {
+        width: 100%;
+        text-align: center;
+        font-size: 24px;
+        font-weight: 800;
+      }
+
+      .credit {
+        position: fixed;
+        font-size: 8px;
+        bottom: 10px;
+        right: 10px;
+      }
+
+      .donation {
+        position:fixed;
+        font-size: 8px;
+        bottom: 10px;
+        left: 10px;
+      }
+
+      #vidThumbWrapper {
+        width: 85%;
+        margin: auto;
+        /* max-height: 250px; */
+      }
+
+      #vidThumb {
+        width: 100%;
+        /* margin: auto; */
+        /* max-height: 250px; */
+      }
+
+      #vidTitle {
+        width: 100%;
+        text-align: center;
+        margin: auto;
+        font-size: 12px
+      }
+    </style>
+  </head>
+
+
+<body>
+  <div class="mainbox ">
+    <div class="nes-container is-rounded">
+        <span class="title nes-text">Sample Youtube</span>
+        <hr />
+        <div class="videoinfo">
+          <div class="nes-container" id="vidThumbWrapper" style="display: none;">
+            <img id="vidThumb">
+          </div>
+          <br>
+          <div id="vidTitle"></div>
+        </div>
+        <br />
+  
+        <div class="inputbox nes-field is-inline">
+          <input placeholder="ex: www.youtube.com/watch?v=dQw4w9WgXcQ" class="urlInput nes-input" type="text" id="url" />
+          <!-- <div style="width: 25px"></div> -->
+          <!-- <div class="nes-container with-title is-centered">
+            <p class="title">Download</p>
+            <button id="download" class="nes-btn">.mp3</button>
+            <button id="downloadwav" class="nes-btn">.aac</button>
+          </div> -->
+            <button id="download" class="nes-btn">Download .MP3</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- <div class="credit">
+      Made with ❤️ by <a href="https://www.github.com/matttt">Matthew Martori</a>
+    </div> -->
+
+    <div class="donation">
+      <form action="https://www.paypal.com/donate" method="post" target="_top">
+        <input type="hidden" name="business" value="KE9WYCPPJJT8Y" />
+        <input type="hidden" name="no_recurring" value="1" />
+        <input type="hidden" name="item_name" value="sampleyou.tube" />
+        <input type="hidden" name="currency_code" value="USD" />
+        <input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_donate_LG.gif" border="0" name="submit" title="PayPal - The safer, easier way to pay online!" alt="Donate with PayPal button" />
+        <img alt="" border="0" src="https://www.paypal.com/en_US/i/scr/pixel.gif" width="1" height="1" />
+        </form>
+           
+        <span>Help keep Sample Youtube ad-free</span>
+ 
+    </div>
+
+    <script async defer src="https://scripts.simpleanalyticscdn.com/latest.js"></script>
+    <noscript><img src="https://queue.simpleanalyticscdn.com/noscript.gif" alt="" referrerpolicy="no-referrer-when-downgrade" /></noscript>
+  </body>
+
+
+  <script>
+    const urlInput = document.querySelector("#url");
+    const downloadBtn = document.querySelector("#download");
+    // const downloadWavBtn = document.querySelector("#downloadwav");
+
+    downloadBtn.addEventListener(
+      "click",
+      function (e) {
+        axios({
+          url: "/info", //your url
+          method: "POST",
+          responseType: "json", // important
+          data: {
+            url: urlInput.value
+          }
+        }).then((response) => {
+          const vidThumbWrapperEl = document.querySelector('#vidThumbWrapper')
+          const vidThumbEl = document.querySelector('#vidThumb')
+          const vidTitleEl = document.querySelector('#vidTitle')
+          const {title, thumbnail, id} = response.data
+
+          vidThumbWrapperEl.style.display = "block";
+          vidThumbEl.setAttribute('src', thumbnail);
+          vidTitleEl.innerHTML = title;
+
+          const link = document.createElement("a");
+          link.href = `/download/${id}`;
+          link.setAttribute("download", title + '.mp3'); //or any other extension
+          document.body.appendChild(link);
+          link.click();
+        })
+      },
+      false
+    );
+
+  </script>
+</html>
